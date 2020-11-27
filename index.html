@@ -1,0 +1,966 @@
+<!doctype html>
+<html lang="en-US">
+	
+	<div class="loading">
+		<img src="https://media0.giphy.com/media/MDrmyLuEV8XFOe7lU6/200w.webp?cid=ecf05e47f83x42ythkim11b5k1ua55uzgq97469dya0hd9br&rid=200w.webp">
+	</div>
+	<div class="app">
+	</div>
+	
+	<head>
+		
+		<style>
+			@import url(https://fonts.googleapis.com/css?family=Lato);
+			body, html {
+				height: 100%;
+				margin: 0;
+				font-family: Lato;
+			}
+			
+			.app {
+				display:none;
+			}
+			.loading {
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				position: fixed;
+				top: 35%;
+				left: 45%;
+			}
+			
+			.tabs {
+				overflow: auto;
+				height: 35px;
+				background-color: #d4d4d4;
+			}
+			
+			.stripe {
+				overflow: auto;
+				height: 40px;
+				background-color: #e0e0e0;
+			}
+			
+			.mr-1 {
+				margin-right: 0.25rem !important;
+			}
+			
+			/* Style individual tabs (class="tabsection") */
+			.tabsection {
+				background-color: inherit;
+				border: 1px solid #f0f0f0;
+				outline: none;
+				cursor: pointer;
+				padding: 4px 12px;
+				font-size: 16px;
+				width: 20%;
+			}
+			
+			/* Change background color of the tab on hover */
+			.tabsection:hover {
+				background-color: #cfcfcf;
+			}
+						
+			/* Style the tab content */
+			.tabcontent {
+				display: none;
+				background-color: #fcfcfc;
+				padding-top: 5px;
+			}
+			
+			.card-header {
+				padding: 0.75rem 1.25rem;
+				font-size: 8px;
+				margin-bottom: 0;
+				background-color: rgba(0, 0, 0, 0.03);
+				border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+			}
+			
+			.card-body {
+				flex: 1 1 auto;
+				min-height: 1px;
+				padding: 1.25rem;
+			}
+			
+			table, tr, th, td {
+				margin: 2px;
+			}
+			
+			#chartdiv11 {
+				width: 100%;
+				height: 380px;
+				border: 1px solid #cccccc;
+			}
+			
+			#chartdiv12 {
+				width: 100%;
+				height: 380px;
+				border: 1px solid #cccccc;
+			}
+			
+			#chartdiv13 {
+				width: 100%;
+				height: 380px;
+				border: 1px solid #cccccc;
+			}
+	
+			#chartdiv10 {
+				width: 100%;
+				height: 380px;
+				border: 1px solid #cccccc;
+			}
+			
+			#chartdiv41 {
+				width: 50%;
+				height: 400px;
+				border: 1px solid #cccccc;
+			}
+			
+			#chartdiv42 {
+				width: 80%;
+				height: 800px;
+				border: 1px solid #cccccc;
+			}
+			
+			#chartdiv43 {
+				width: 40%;
+				height: 700px;
+				border: 1px solid #cccccc;
+			}
+			
+			#chartdiv44 {
+				width: 55%;
+				height: 500px;
+				border: 1px solid #cccccc;
+			}			
+		</style>
+		
+		<meta charset="utf-8">
+		<title>Curve Fitting App.</title>
+		
+		<!-- jQuery -->
+		<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+		<!-- Handsontable -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.20.2/handsontable.full.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.20.2/handsontable.full.min.css">
+		<link rel="stylesheet" type="text/css" href="https://handsontable.com/static/css/main.css">
+		<!-- amCharts -->
+		<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+		<script src="https://www.amcharts.com/lib/3/xy.js"></script>
+		<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+		<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+		<script src="https://www.amcharts.com/lib/3/plugins/dataloader/dataloader.min.js"></script>
+		<script src="//www.amcharts.com/lib/3/plugins/tools/datePadding/datePadding.min.js"></script>
+		<script src="https://www.amcharts.com/lib/3/plugins/tools/bestFitLine/bestFitLine.min.js"></script>
+		<script src="https://www.amcharts.com/lib/3/plugins/export/export.js" type="text/javascript"></script>
+		<link href="https://www.amcharts.com/lib/3/plugins/export/export.css" rel="stylesheet" type="text/css">
+		
+	</head>
+	
+	<body>
+			
+		<h1 style="font-size:22px;">&nbsp;Curve Fitting<a class="button butn" href="https://docs.google.com/spreadsheets/d/1SwzNQ2rWdOnDPPc40LhVc0DNBXpOcCtn0qQz2C991VQ/edit#gid=846789546" target="_blank">
+			&nbsp;Click here for the Data Sets.</a>
+		</h1>
+		<section>
+			<div class="tabs">
+				<button class="tabsection" onclick="openPage('Launch', this, '#fcfcfc')" id="defaultOpen">Exploring different curve fitting</button>
+				<button class="tabsection" onclick="openPage('Project', this, '#fcfcfc')">Results of fitting</button>
+			</div>
+		</section>
+		
+		<div id="Launch" class="tabcontent">
+			<table>
+				<th><div id="chartdiv11"></div></th>
+				<th><div id="chartdiv12"></div></th>
+				<th><div id="chartdiv13"></div></th>
+				<th><div id="chartdiv10"></div></th>
+			</table>
+			
+			<section class="stripe">
+				<h2 style="font-size:15px;">&nbsp;RMSE:</h2>
+			</section>
+			
+			<div id="hTable1"></div>
+			
+			<section class="stripe">
+				<h2 style="font-size:15px;">&nbsp;Source Data:</h2>
+			</section>
+			
+			<div id="hTable2"></div>
+			<div id="export-buttons" class="visible">
+				<button id="export-csv1" class="btn size-medium bg-blue text-white shadow hover-moveup" style="float: left; margin-top: 5px; margin-bottom: 20px;">Export to a .csv file</button>
+			</div>
+		</div>
+		
+		<div id="Project" class="tabcontent">
+			<section class="stripe">
+				<h2 style="font-size:15px;">&nbsp;Lowest RMSE (the best fit)</h2>
+			</section>
+			<div class="card-body">
+				<img id="chartdiv41" src="http://drive.google.com/uc?export=view&id=1353C8OqNogNHGHXx5FanV5QUCJyjvb2c" alt="Lowest RMSE and optimal window size">
+			</div>
+			<section class="stripe">
+				<h2 style="font-size:15px;">&nbsp;Fitted curve v.s Moore's law in log space</h2>
+			</section>
+			<div class="card-body">
+				<img id="chartdiv42" src="http://drive.google.com/uc?export=view&id=1-2Pop7T-goZqNjIAlw2yASDp6mquvj7R" alt="Curve Fitting Results (log)">
+			</div>
+			<section class="stripe">
+				<h2 style="font-size:15px;">&nbsp;Fitted curve v.s Moore's law in linear space</h2>
+			</section>
+			<div class="card-body">
+				<img id="chartdiv43" src="http://drive.google.com/uc?export=view&id=1-7UBpB0SY5ztwKuL-GMYugzJBOUdWiRo" alt="Curve Fitting Results">
+			</div>
+			<section class="stripe">
+				<h2 style="font-size:15px;">&nbsp;Model summary</h2>
+			</section>
+			<div class="card-body">
+				<img id="chartdiv44" src="http://drive.google.com/uc?export=view&id=1-11k1KVY85xtqVJ_-1w7cK-ydiNnnApx" alt="Model Summary">
+			</div>
+			<section class="stripe">
+				<h2 style="font-size:15px;">&nbsp;Click the image to access the curve fitting algorithms in Python on Google Colab (Sign-in ID: spacemissions20@gmail.com / Password: spacemissions)</h2>
+			</section>
+			<div class="card-body">
+				<iframe src="https://drive.google.com/embeddedfolderview?id=1RurleTzpqoJiB9DqUbROIKXdvj0CtpdO#grid"  frameborder="0" width="240" height="280" marginheight="0" marginwidth="0"></iframe>
+			</div>
+		</div>					
+		
+		<script>
+			
+			$(function() {
+				$(".loading").fadeOut(1000, function() {
+					$(".app").fadeIn(1000);
+				});
+			});
+			
+			function openPage(tabName, buttOpen, color) {
+				// Hide all class="tabcontent" elements
+				var i, tabcontent, tabsection;
+				tabcontent = document.getElementsByClassName("tabcontent");
+				for (i = 0; i < tabcontent.length; i++) {
+					tabcontent[i].style.display = "none";
+				}
+				
+				// Remove the background color of the tabs (class="tabsection")
+				tabsection = document.getElementsByClassName("tabsection");
+				for (i = 0; i < tabsection.length; i++) {
+					tabsection[i].style.backgroundColor = "";
+				}
+				
+				// Show the specific tab content
+				document.getElementById(tabName).style.display = "block";
+				
+				// Add the specific color to the button used to open the tab content
+				buttOpen.style.backgroundColor = color;
+			}
+			
+			// Get the element with id="defaultOpen" and click on it
+			document.getElementById("defaultOpen").click();
+			
+			// Build functions to create the interactive charts.
+			
+			function createChart10(inputdata) {
+				
+				var chart = AmCharts.makeChart("chartdiv10", {
+					"type": "serial",
+					"theme": "light",
+					"dataProvider": inputdata,
+					"resizeCategoryWidth": 2.72,
+					"marginTop": 5,
+					"marginBottom": 0,
+					"marginRight": 15,
+					"marginLeft": 0,
+					"titles": [{
+						"text": "New Curve Fitting",
+						"size": 10
+					}],
+					"categoryField": "launchdate",
+					"categoryAxis": {
+						"title": 'launch date',
+						"titleFontSize": 10,
+						"fontSize": 9,
+						"autoGridCount": false,
+						"gridCount": 20,
+						"parseDates": true,
+						"axisThickness": 2,
+						"labelRotation": 30
+					},
+					"valueAxes": [{
+						//"logarithmic": true,
+						"titleFontSize": 10,
+						"fontSize": 9,
+						"gridAlpha": 0.07,
+						"position": "left",
+						"title": "log2(lifetime)",
+						"axisThickness": 2
+					}],
+					"graphs": [{
+							"id": "g1",
+							"title": "log2(Lifetime)",
+							"valueField": "log2lifetimeinlaunchdateorder",
+							"lineThickness": 0,
+							"bullet": "round",
+							"bulletSize": 4,
+						},
+						{
+							"title": "New Fit 1",
+							"valueField": "newfit1",
+							"type": "line",
+							"lineThickness": 2,
+							"lineColor": "#3d0101",
+							"fillAlphas": 0
+						},
+						{
+							"title": "New Fit 2",
+							"valueField": "newfit2",
+							"type": "line",
+							"lineThickness": 2,
+							"lineColor": "#001773",
+							"fillAlphas": 0
+						},
+						{
+							"title": "New Fit 3",
+							"valueField": "newfit3",
+							"type": "line",
+							"lineThickness": 2,
+							"lineColor": "#065700",							
+							"fillAlphas": 0
+					}],
+					"chartScrollbar": {
+						"graph": "g1",
+						"oppositeAxis": true,
+						"offset": 8,
+						"scrollbarHeight": 20,
+						"backgroundAlpha": 0,
+						"selectedBackgroundAlpha": 0,
+						"selectedBackgroundColor": "#000000",
+						"graphFillAlpha": 0,
+						"graphLineAlpha": 0.5,
+						"selectedGraphFillAlpha": 0,
+						"selectedGraphLineAlpha": 0.5,
+						"autoGridCount": false,
+						"gridCount": 8,
+						"color": "#7a7a7a"
+					},
+					"valueScrollbar":{
+						"graph": "g1",
+						"oppositeAxis": true,
+						"offset": 8,
+						"scrollbarHeight": 10,
+						"backgroundAlpha": 0,
+						"selectedBackgroundAlpha": 0,
+						"selectedBackgroundColor": "#000000",
+						"graphFillAlpha": 0,
+						"graphLineAlpha": 0.5,
+						"selectedGraphFillAlpha": 0,
+						"selectedGraphLineAlpha": 0.5,
+						"autoGridCount": false,
+						"gridCount": 5,
+						"color": "#7a7a7a"
+					},
+					"chartCursor": {
+						"categoryBalloonDateFormat": "YYYY-MM-DD",
+						"cursorAlpha": 0.1,
+						"cursorColor":"#000000",
+						"fullWidth":true,
+						"valueLineEnabled":true,
+						"valueLineBalloonEnabled":true,
+						"valueLineAlpha":0.5,
+						"valueBalloonsEnabled": false,
+						"zoomable": true
+					},
+					"legend": {
+						"enabled": true,
+						"fontSize": 9,
+						"position": "bottom",
+						"horizontalGap": 0,
+						"markerSize": 10,
+						"labelWidth": 0,
+						"markerLabelGap": 2,
+						"valueWidth": 30,
+                        "verticalGap": 0.5,
+						"useGraphSettings": true //Set the markers to have similar-look shapes as in the graph.
+					},
+					"export": {
+						"enabled": true
+					},
+				});
+				
+				return chart;
+			}
+			
+			function createChart11(inputdata) {
+				
+				var chart = AmCharts.makeChart("chartdiv11", {
+					"type": "serial",
+					"theme": "light",
+					"dataProvider": inputdata,
+					"resizeCategoryWidth": 2.72,
+					"marginTop": 5,
+					"marginBottom": 0,
+					"marginRight": 15,
+					"marginLeft": 0,
+					"titles": [{
+						"text": "Exponential Fitting of Lifetimes",
+						"size": 10
+					}],
+					"categoryField": "launchdate",
+					"categoryAxis": {
+						"title": 'launch date',
+						"titleFontSize": 10,
+						"fontSize": 9,
+						"autoGridCount": false,
+						"gridCount": 20,
+						"parseDates": true,
+						"axisThickness": 2,
+						"labelRotation": 30
+					},
+					"valueAxes": [{
+						//"logarithmic": true,
+						"titleFontSize": 10,
+						"fontSize": 9,
+						"gridAlpha": 0.07,
+						"position": "left",
+						"title": "lifetime",
+						"axisThickness": 2
+					}],
+					"graphs": [{
+							"id": "g1",
+							"title": "Lifetime",
+							"valueField": "lifetime",
+							"lineThickness": 0,
+							"bullet": "round",
+							"bulletSize": 4,
+						},
+						{
+							"title": "Exponential Fitting",
+							"valueField": "exponentialfittingonlaunchdate",
+							"type": "line",
+							"lineThickness": 2,
+							"lineColor": "#3d0101",
+							"fillAlphas": 0
+					}],
+					"chartScrollbar": {
+						"graph": "g1",
+						"oppositeAxis": true,
+						"offset": 8,
+						"scrollbarHeight": 20,
+						"backgroundAlpha": 0,
+						"selectedBackgroundAlpha": 0,
+						"selectedBackgroundColor": "#000000",
+						"graphFillAlpha": 0,
+						"graphLineAlpha": 0.5,
+						"selectedGraphFillAlpha": 0,
+						"selectedGraphLineAlpha": 0.5,
+						"autoGridCount": false,
+						"gridCount": 8,
+						"color": "#7a7a7a"
+					},
+					"valueScrollbar":{
+						"graph": "g1",
+						"oppositeAxis": true,
+						"offset": 8,
+						"scrollbarHeight": 10,
+						"backgroundAlpha": 0,
+						"selectedBackgroundAlpha": 0,
+						"selectedBackgroundColor": "#000000",
+						"graphFillAlpha": 0,
+						"graphLineAlpha": 0.5,
+						"selectedGraphFillAlpha": 0,
+						"selectedGraphLineAlpha": 0.5,
+						"autoGridCount": false,
+						"gridCount": 5,
+						"color": "#7a7a7a"
+					},
+					"chartCursor": {
+						"categoryBalloonDateFormat": "YYYY-MM-DD",
+						"cursorAlpha": 0.1,
+						"cursorColor":"#000000",
+						"fullWidth":true,
+						"valueLineEnabled":true,
+						"valueLineBalloonEnabled":true,
+						"valueLineAlpha":0.5,
+						"valueBalloonsEnabled": false,
+						"zoomable": true
+					},
+					"legend": {
+						"enabled": true,
+						"fontSize": 9,
+						"position": "bottom",
+						"horizontalGap": 0,
+						"markerSize": 10,
+						"labelWidth": 0,
+						"markerLabelGap": 2,
+						"valueWidth": 30,
+                        "verticalGap": 0.5,
+						"useGraphSettings": true //Set the markers to have similar-look shapes as in the graph.
+					},
+					"export": {
+						"enabled": true
+					},
+				});
+				
+				return chart;
+			}
+			
+			function createChart12(inputdata) {
+				
+				var chart = AmCharts.makeChart("chartdiv12", {
+					"type": "serial",
+					"theme": "light",
+					"dataProvider": inputdata,
+					"resizeCategoryWidth": 2.72,
+					"marginTop": 5,
+					"marginBottom": 0,
+					"marginRight": 15,
+					"marginLeft": 0,
+					"titles": [{
+						"text": "Moving Window Average of Lifetimes",
+						"size": 10
+					}],
+					"categoryField": "launchdate",
+					"categoryAxis": {
+						"title": 'launch date',
+						"titleFontSize": 10,
+						"fontSize": 9,
+						"autoGridCount": false,
+						"gridCount": 20,
+						"parseDates": true,
+						"axisThickness": 2,
+						"labelRotation": 30
+					},
+					"valueAxes": [{
+						//"logarithmic": true,
+						"titleFontSize": 10,
+						"fontSize": 9,
+						"gridAlpha": 0.07,
+						"position": "left",
+						"title": "lifetime",
+						"axisThickness": 2
+					}],
+					"graphs": [{
+							"id": "g1",
+							"title": "Lifetime",
+							"valueField": "lifetime",
+							"lineThickness": 0,
+							"bullet": "round",
+							"bulletSize": 4,
+						},
+						{
+							"title": "Moving Window Average of Lifetimes",
+							"valueField": "movingwindowaverageoflifetimeinlaunchdateorder",
+							"type": "line",
+							"lineThickness": 2,
+							"lineColor": "#3d0101",
+							"fillAlphas": 0
+					}],
+					"chartScrollbar": {
+						"graph": "g1",
+						"oppositeAxis": true,
+						"offset": 8,
+						"scrollbarHeight": 20,
+						"backgroundAlpha": 0,
+						"selectedBackgroundAlpha": 0,
+						"selectedBackgroundColor": "#000000",
+						"graphFillAlpha": 0,
+						"graphLineAlpha": 0.5,
+						"selectedGraphFillAlpha": 0,
+						"selectedGraphLineAlpha": 0.5,
+						"autoGridCount": false,
+						"gridCount": 8,
+						"color": "#7a7a7a"
+					},
+					"valueScrollbar":{
+						"graph": "g1",
+						"oppositeAxis": true,
+						"offset": 8,
+						"scrollbarHeight": 10,
+						"backgroundAlpha": 0,
+						"selectedBackgroundAlpha": 0,
+						"selectedBackgroundColor": "#000000",
+						"graphFillAlpha": 0,
+						"graphLineAlpha": 0.5,
+						"selectedGraphFillAlpha": 0,
+						"selectedGraphLineAlpha": 0.5,
+						"autoGridCount": false,
+						"gridCount": 5,
+						"color": "#7a7a7a"
+					},
+					"chartCursor": {
+						"categoryBalloonDateFormat": "YYYY-MM-DD",
+						"cursorAlpha": 0.1,
+						"cursorColor":"#000000",
+						"fullWidth":true,
+						"valueLineEnabled":true,
+						"valueLineBalloonEnabled":true,
+						"valueLineAlpha":0.5,
+						"valueBalloonsEnabled": false,
+						"zoomable": true
+					},
+					"legend": {
+						"enabled": true,
+						"fontSize": 9,
+						"position": "bottom",
+						"horizontalGap": 0,
+						"markerSize": 10,
+						"labelWidth": 0,
+						"markerLabelGap": 2,
+						"valueWidth": 30,
+                        "verticalGap": 0.5,
+						"useGraphSettings": true //Set the markers to have similar-look shapes as in the graph.
+					},
+					"export": {
+						"enabled": true
+					},
+				});
+				
+				return chart;
+			}
+			
+			function createChart13(inputdata) {
+				
+				var chart = AmCharts.makeChart("chartdiv13", {
+					"type": "serial",
+					"theme": "light",
+					"dataProvider": inputdata,
+					"resizeCategoryWidth": 2.72,
+					"marginTop": 5,
+					"marginBottom": 0,
+					"marginRight": 15,
+					"marginLeft": 0,
+					"titles": [{
+						"text": "Moving Window Average of log2(Lifetime)",
+						"size": 10
+					}],
+					"categoryField": "launchdate",
+					"categoryAxis": {
+						"title": 'launch date',
+						"titleFontSize": 10,
+						"fontSize": 9,
+						"autoGridCount": false,
+						"gridCount": 20,
+						"parseDates": true,
+						"axisThickness": 2,
+						"labelRotation": 30
+					},
+					"valueAxes": [{
+						//"logarithmic": true,
+						"titleFontSize": 10,
+						"fontSize": 9,
+						"gridAlpha": 0.07,
+						"position": "left",
+						"title": "log2(lifetime)",
+						"axisThickness": 2
+					}],
+					"graphs": [{
+							"id": "g1",
+							"title": "log2(Lifetime)",
+							"valueField": "log2lifetimeinlaunchdateorder",
+							"lineThickness": 0,
+							"bullet": "round",
+							"bulletSize": 4,
+							"legendValueText": "[[value]]"
+						},
+						{
+							"title": "Moving Window Average of log2(Lifetime)",
+							"valueField": "movingwindowaverageoflog2lifetimeinlaunchdateorder",
+							"type": "line",
+							"lineThickness": 2,
+							"lineColor": "#3d0101",
+							
+							"fillAlphas": 0
+					}],
+					"chartScrollbar": {
+						"graph": "g1",
+						"oppositeAxis": true,
+						"offset": 8,
+						"scrollbarHeight": 20,
+						"backgroundAlpha": 0,
+						"selectedBackgroundAlpha": 0,
+						"selectedBackgroundColor": "#000000",
+						"graphFillAlpha": 0,
+						"graphLineAlpha": 0.5,
+						"selectedGraphFillAlpha": 0,
+						"selectedGraphLineAlpha": 0.5,
+						"autoGridCount": false,
+						"gridCount": 8,
+						"color": "#7a7a7a"
+					},
+					"valueScrollbar":{
+						"graph": "g1",
+						"oppositeAxis": true,
+						"offset": 8,
+						"scrollbarHeight": 10,
+						"backgroundAlpha": 0,
+						"selectedBackgroundAlpha": 0,
+						"selectedBackgroundColor": "#000000",
+						"graphFillAlpha": 0,
+						"graphLineAlpha": 0.5,
+						"selectedGraphFillAlpha": 0,
+						"selectedGraphLineAlpha": 0.5,
+						"autoGridCount": false,
+						"gridCount": 5,
+						"color": "#7a7a7a"
+					},
+					"chartCursor": {
+						"categoryBalloonDateFormat": "YYYY-MM-DD",
+						"cursorAlpha": 0.1,
+						"cursorColor":"#000000",
+						"fullWidth":true,
+						"valueLineEnabled":true,
+						"valueLineBalloonEnabled":true,
+						"valueLineAlpha":0.5,
+						"valueBalloonsEnabled": false,
+						"zoomable": true
+					},
+					"legend": {
+						"enabled": true,
+						"fontSize": 9,
+						"position": "bottom",
+						"horizontalGap": 0,
+						"markerSize": 10,
+						"labelWidth": 0,
+						"markerLabelGap": 2,
+						"valueWidth": 30,
+                        "verticalGap": 0.5,
+						"useGraphSettings": true //Set the markers to have similar-look shapes as in the graph.
+					},
+					"export": {
+						"enabled": true
+					},
+				});
+				
+				return chart;
+			}
+			
+			AmCharts.ready(function() {
+				
+				$.getJSON('https://spreadsheets.google.com/feeds/list/1SwzNQ2rWdOnDPPc40LhVc0DNBXpOcCtn0qQz2C991VQ/1/public/values?alt=json', function(data) {
+					
+					var sheetData = data.feed.entry;
+					
+					var arry1 = [];
+					
+					for (var i = 0; i < sheetData.length; i++) {
+						var objson = [							
+								sheetData[i]['gsx$rmseexponentialfitting']['$t'],
+								sheetData[i]['gsx$rmsemovingwindowaverageoflifetime']['$t'],
+								sheetData[i]['gsx$rmsemovingwindowaverageoflog2lifetime']['$t'],
+								sheetData[i]['gsx$rmsenewfit1']['$t'],
+								sheetData[i]['gsx$rmsenewfit2']['$t'],
+								sheetData[i]['gsx$rmsenewfit3']['$t'],
+							];
+						arry1.push(objson);
+					}
+					
+					var arry2 = [];
+					
+					for (var i = 0; i < sheetData.length; i++) {
+						var objson = [
+								sheetData[i]['gsx$ordinality']['$t'],
+								sheetData[i]['gsx$craft']['$t'],
+								sheetData[i]['gsx$launchdate']['$t'],
+								sheetData[i]['gsx$failuredate']['$t'],
+								sheetData[i]['gsx$lifetime']['$t'],
+								sheetData[i]['gsx$exponentialfittingonlaunchdate']['$t'],
+								sheetData[i]['gsx$movingwindowaverageoflifetimeinlaunchdateorder']['$t'],
+								sheetData[i]['gsx$movingwindowstdevoflifetimeinlaunchdateorder']['$t'],
+								sheetData[i]['gsx$log2lifetimeinlaunchdateorder']['$t'],
+								sheetData[i]['gsx$movingwindowaverageoflog2lifetimeinlaunchdateorder']['$t'],
+								sheetData[i]['gsx$newfit1']['$t'],
+								sheetData[i]['gsx$newfit2']['$t'],
+								sheetData[i]['gsx$newfit3']['$t'],
+							];
+						arry2.push(objson);
+					}
+					
+					var dataSM1 = arry1,
+						dataSM2 = arry2,
+						chart10,
+						chart11,
+						chart12,
+						chart13,
+						tableElement1 = document.querySelector('#hTable1'),
+						tableElement2 = document.querySelector('#hTable2');
+					
+					var tableSetting1 = {
+							data: dataSM1,
+							stretchH: 'all',
+							width: 1510,
+							autoWrapRow: true,
+							height: 50,
+							maxRows: 1,
+							rowHeaders: true,
+							colHeaders: [
+								'(A) RMSE (Exponential fitting)',
+								'(B) RMSE (Moving window average of Lifetime)',
+								'(C) RMSE (Moving window average of log2(Lifetime))',
+								'(D) RMSE (New fit 1)',
+								'(E) RMSE (New fit 2)',
+								'(F) RMSE (New fit 3)',
+							],
+							columnSorting: {
+								indicator: true
+							},
+							multiColumnSorting: {
+								indicator: true
+							},
+							autoColumnSize: {
+								samplingRatio: 23
+							},
+							mergeCells: true,
+							contextMenu: true,
+							manualRowResize: true,
+							manualColumnResize: true,
+							manualRowMove: true,
+							manualColumnMove: true,
+							formulas: true,
+							licenseKey: 'non-commercial-and-evaluation',
+					};
+					
+					var tableSetting2 = {
+							data: dataSM2,
+							stretchH: 'all',
+							width: 1510,
+							autoWrapRow: true,
+							height: 580,
+							maxRows: 600,
+							rowHeaders: true,
+							colHeaders: [
+								'(A) Ordinality',
+								'(B) Craft',
+								'(C) Launch date',
+								'(D) Failure date',
+								'(E) Lifetime',
+								'(F) Exponential fitting on launch date',
+								'(G) Moving window average of lifetimes in launch date order',
+								'(H) Moving window stdev of lifetimes in launch date order',
+								'(I) log2(Lifetime) in launch date order',
+								'(J) Moving window average of log2(Lifetime)in launch date order',
+								'(K) New fit 1',
+								'(L) New fit 2',
+								'(M) New fit 3',
+							],
+							columnSorting: {
+								indicator: true
+							},
+							multiColumnSorting: {
+								indicator: true
+							},
+							autoColumnSize: {
+								samplingRatio: 23
+							},
+							mergeCells: true,
+							contextMenu: true,
+							manualRowResize: true,
+							manualColumnResize: true,
+							manualRowMove: true,
+							manualColumnMove: true,
+							dropdownMenu: true,
+							filters: true,
+							formulas: true,
+							licenseKey: 'non-commercial-and-evaluation',
+							exportFile: true,
+							observeChanges: true,
+							"afterInit": function(firstTime) {
+								chart11 = createChart11(
+									formatChartData(this.getData())
+								);
+								chart12 = createChart12(
+									formatChartData(this.getData())
+								);
+								chart13 = createChart13(
+									formatChartData(this.getData())
+								);
+								chart10 = createChart10(
+									formatChartData(this.getData())
+								);
+							},
+							"afterChange": function(changes, source) {
+								if (changes === null)
+									return;
+								chart11.dataProvider = formatChartData(this.getData());
+								chart11.validateData();
+								chart12.dataProvider = formatChartData(this.getData());
+								chart12.validateData();
+								chart13.dataProvider = formatChartData(this.getData());
+								chart13.validateData();
+								chart10.dataProvider = formatChartData(this.getData());
+								chart10.validateData();
+							},
+					};
+					
+					var myTable1 = new Handsontable(tableElement1, tableSetting1);
+					
+					var myTable2 = new Handsontable(tableElement2, tableSetting2);
+					
+					var button = document.getElementById("export-csv1");
+					var exportPlugin = myTable2.getPlugin("exportFile");
+					
+					button.addEventListener("click", function(event) {
+						exportPlugin.downloadFile("csv", {
+							bom: false,
+							columnDelimiter: ',',
+							columnHeaders: true,
+							rowDelimiter: '\r\n',
+							rowHeaders: false,
+							exportHiddenColumns: true,
+							exportHiddenRows: true,
+							fileExtension: 'csv',
+							filename: 'Table_[YYYY]-[MM]-[DD]',
+							mimeType: 'text/csv'
+						});
+					});
+					
+					function formatChartData(tableData) {
+						var chartData = [];
+						for(var i = 0; i < tableData.length; i++) {
+							chartData.push({
+								"ordinality":											tableData[i][0],
+								"craft":												tableData[i][1],
+								"launchdate":											tableData[i][2],
+								"failuredate":											tableData[i][3],
+								"lifetime":												tableData[i][4],
+								"exponentialfittingonlaunchdate":						tableData[i][5],
+								"movingwindowaverageoflifetimeinlaunchdateorder":		tableData[i][6],
+								"movingwindowstdevoflifetimeinlaunchdateorder":			tableData[i][7],
+								"log2lifetimeinlaunchdateorder":						tableData[i][8],
+								"movingwindowaverageoflog2lifetimeinlaunchdateorder":	tableData[i][9],
+								"newfit1":												tableData[i][10],
+								"newfit2":												tableData[i][11],
+								"newfit3":												tableData[i][12],
+							});
+						}
+						return chartData;
+					}
+					
+				})
+				
+				AmCharts.addInitHandler(function(chart) {
+					
+					// set resizeCategoryWidth
+					if (chart.resizeCategoryWidth === undefined)
+						return;
+					
+					// set base values
+					var categoryWidth = chart.resizeCategoryWidth;
+					
+					// calculate and set container dimensions
+					var containerWidth = chart.resizeCategoryWidth * chart.dataProvider.length;
+					if(chart.rotate) {
+						chart.div.style.height = containerWidth + "px";
+					}
+					else {
+						chart.div.style.width = containerWidth + "px";
+					}
+					
+				}, ['serial']);
+				
+			});			
+			
+		</script>
+		
+	</body>
+
+</html>
